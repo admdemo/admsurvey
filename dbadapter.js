@@ -1,4 +1,6 @@
-var pgp = require("pg-promise")(/*options*/);
+var initOptions = {noWarnings:true};
+var pgp = require("pg-promise")(initOptions);
+//var pgp = require("pg-promise")(/*options*/);
 
 function PostgresDBAdapter() {
   var db = pgp(process.env.DATABASE_URL || "postgres://postgres:123456@localhost:5432/surveyjs");
@@ -32,15 +34,20 @@ function PostgresDBAdapter() {
   }
 
   function getResults(postId, callback) {
-    db
-      .any("SELECT * FROM results WHERE postid=$1", [postId])
-      .then(function(data) {
-        //console.log(JSON.stringify(data));
-        var results = (data || []).map(function(item) {
-          return item["json"];
-        });
-        callback(results);
-      });
+   try {
+       db
+           .any("SELECT * FROM results WHERE postid=$1", [postId])
+           .then(function (data) {
+               //console.log(JSON.stringify(data));
+               var results = (data || []).map(function (item) {
+                   return item["json"];
+               });
+               callback(results);
+           });
+   }
+   catch (e) {
+
+   }
   }
 
   function deleteSurvey(surveyId, callback) {
@@ -112,9 +119,15 @@ function PostgresDBAdapter() {
   return {
     addSurvey: addSurvey,
     getSurvey: function(surveyId, callback) {
-      getSurveys(function(result) {
-        callback(JSON.parse(result[surveyId].json));
-      });
+
+          getSurveys(function (result) {
+
+                callback(JSON.parse(result[surveyId].json));
+
+
+          });
+
+
     },
     storeSurvey: storeSurvey,
     getSurveys: getSurveys,

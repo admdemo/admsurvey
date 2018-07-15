@@ -17,8 +17,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 function getDBAdapter(req) {
-  //var db = new dbadapter();
-  var db = new inmemorydbadapter(req.session);
+  var db = new dbadapter();
+  //var db = new inmemorydbadapter(req.session);
   return db;
 }
 
