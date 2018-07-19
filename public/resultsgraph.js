@@ -27,7 +27,9 @@ function SurveyManager(baseUrl, accessKey) {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onload = function() {
       var result = xhr.response ? JSON.parse(xhr.response) : [];
-      var counts = {};
+        console.log(result);
+        var ChartTitle='';
+        var counts = {};
       result.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
       console.log(counts);
       var ArrayData=[];
@@ -39,6 +41,7 @@ function SurveyManager(baseUrl, accessKey) {
         for(var It in JsonItem)
         {
           JsonData['x']=JsonItem[It];
+            ChartTitle=It;
         }
         JsonData['value']=counts[key];
         ArrayData.push(JsonData);
@@ -49,7 +52,7 @@ function SurveyManager(baseUrl, accessKey) {
        }
     console.log(ArrayData);
     var chart = anychart.column3d(ArrayData);
-          //chart.title("Create a 3D Column chart");
+    chart.title(ChartTitle);
 
       chart.container("container");
 
